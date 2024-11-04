@@ -8,11 +8,7 @@
   ],
   "routes": [
     {
-      "src": "/api/tweets",
-      "dest": "api/index.js"
-    },
-    {
-      "src": "/api/random-tweets",
+      "src": "/api/(.*)",
       "dest": "api/index.js"
     }
   ]
