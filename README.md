@@ -82,6 +82,9 @@ The results of the createDataSet function is json data like this
 
 For more details for this process, you can look at the file here [generateDataSet.js](https://github.com/juangsalaz/sentiment-analysis-api/blob/main/data/generateDataSet.js)
 
+## Realtime Data
+For implementation realtime data, we need running the cron job  to generate new fake data for example every 3 minutes (for simulation users make new tweets post in Twitter / X),  and then in the  frontend there is setInterval function to update the chart data every 5 minutes
+
 ##  API Endpoint
 This API endpoint is to get data from MongoDB then show the data in the frontend side.
 This is [API Docummentation ](https://documenter.getpostman.com/view/3460037/2sAY4xCNm5)
