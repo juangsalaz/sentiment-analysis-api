@@ -3,6 +3,8 @@ import path from 'path';
 import http from 'http';
 import { MongoClient } from 'mongodb';
 import { parse } from 'url';
+import http from 'http';
+
 
 dotenv.config({ path: path.resolve('../.env') });
 
@@ -94,25 +96,48 @@ async function handleGetRandomTweets(res) {
   }
 }
 
-const server = http.createServer((req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+const server = async (req, res) => {
+  // Enable CORS
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,POST,PUT,DELETE");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
+  );
 
-  const parsedUrl = parse(req.url, true);
-  const { pathname, query } = parsedUrl;
-
-  if (req.method === 'GET' && pathname === '/api/tweets') {
-    handleGetTweetsByTopic(req, res, query);
-  } else if (req.method === 'GET' && pathname === '/api/random-tweets') {
-    handleGetRandomTweets(res);
-  } else {
-    sendJsonResponse(res, 404, { message: 'Not Found' });
+  // Handle OPTIONS request
+  if (req.method === "OPTIONS") {
+    res.status(200).end();
+    return;
   }
-});
 
-// Start the server
-const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+  // Basic routing
+  if (req.method === "GET") {
+    switch (req.url) {
+      case "/":
+        res.setHeader("Content-Type", "application/json");
+        res.end(
+          JSON.stringify({
+            message: "Welcome to the Vercel Node.js server!",
+            timestamp: new Date().toISOString(),
+          }),
+        );
+        break;
+
+      case "/health":
+        res.setHeader("Content-Type", "application/json");
+        res.end(JSON.stringify({ status: "healthy" }));
+        break;
+
+      default:
+        res.setHeader("Content-Type", "application/json");
+        res.statusCode = 404;
+        res.end(JSON.stringify({ error: "Not found" }));
+    }
+  } else {
+    res.setHeader("Content-Type", "application/json");
+    res.statusCode = 405;
+    res.end(JSON.stringify({ error: "Method not allowed" }));
+  }
+};
