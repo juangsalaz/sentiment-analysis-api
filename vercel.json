@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/tweets",
+      "dest": "api/index.js"
+    },
+    {
+      "src": "/api/random-tweets",
+      "dest": "api/index.js"
+    }
+  ]
+}
