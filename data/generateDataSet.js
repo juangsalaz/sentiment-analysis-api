@@ -24,6 +24,7 @@ async function connectToDatabase(collectionName) {
   }
 }
 
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
